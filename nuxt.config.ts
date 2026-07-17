@@ -15,7 +15,8 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/png', href: '/images/rc-logo.png' },
         { rel: 'preload', href: '/fonts/Danska-Regular.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
-        { rel: 'preload', href: '/fonts/ClementePDam-Bold.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }
+        { rel: 'preload', href: '/fonts/ClementePDam-Bold.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
+        { rel: 'alternate', type: 'application/rss+xml', title: 'Rainbow Crow — Blog & Events', href: '/feed.xml' }
       ]
     }
   }
