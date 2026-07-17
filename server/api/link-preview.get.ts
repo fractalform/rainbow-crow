@@ -39,17 +39,17 @@ function extractImage(html: string): string | null {
   let m =
     html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
     html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)
-  if (m) return m[1]
+  if (m) return m[1] ?? null
 
   // twitter:image fallback
   m =
     html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ||
     html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i)
-  if (m) return m[1]
+  if (m) return m[1] ?? null
 
   // itch.io fallback: first <img> on the page, which is reliably the cover
   m = html.match(/<img[^>]+src=["']([^"']+img\.itch\.zone[^"']+)["']/i)
-  if (m) return m[1]
+  if (m) return m[1] ?? null
 
   return null
 }
