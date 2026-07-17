@@ -1,7 +1,5 @@
 <template>
-  <span class="tag">
-    <slot />
-  </span>
+  <span class="tag"><slot /></span>
 </template>
 
 <style scoped>
@@ -9,7 +7,8 @@
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--border);
-  background: #f6f6f6;
+  background: var(--surface-2);
+  color: var(--muted);
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
   font-size: 0.8rem;

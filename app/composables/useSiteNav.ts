@@ -43,47 +43,40 @@ export function useSiteNav() {
   })
 
   const nav = computed<SiteNavItem[]>(() => {
-    // “Structural” routes that aren’t markdown pages
+    // Order: About, Community, Shop, Blog (About's order comes from
+    // its own frontmatter in content/pages/about.md — navOrder: 1 —
+    // since it's a markdown page, not a hardcoded entry here).
+    //
+    // Shop has no submenu — /shop already has its own category chips
+    // right under the search bar, so a duplicate list here was pure
+    // redundancy (and the links didn't do anything useful besides
+    // repeat what's one click away).
     const base: SiteNavItem[] = [
-      { label: 'Library', to: '/library', order: 10 },
+      { label: 'Community', to: '/community', order: 5 },
+      { label: 'Catalog', to: '/catalog', order: 10 },
       { label: 'Blog', to: '/blog', order: 20 }
     ]
 
     const pages = (pageLinks.value ?? [])
 
-    // Parents = items with no parent
     const parents: ParentNavItem[] = pages
       .filter(p => !p.parent)
-      .map(p => ({
-        label: p.label,
-        to: p.to,
-        order: p.order,
-        children: []
-      }))
+      .map(p => ({ label: p.label, to: p.to, order: p.order, children: [] }))
 
-    // Index parents so children can attach
     const parentIndex = new Map<string, ParentNavItem>()
     for (const p of parents) {
-      parentIndex.set(normParentKey(p.to), p)     // "/about" => "about"
-      parentIndex.set(normParentKey(p.label), p)  // "About" => "about"
+      parentIndex.set(normParentKey(p.to), p)
+      parentIndex.set(normParentKey(p.label), p)
     }
 
-    // Attach children
     for (const c of pages.filter(p => p.parent)) {
       const key = normParentKey(c.parent)
       const parent = parentIndex.get(key)
-
       const child: SiteNavItem = { label: c.label, to: c.to, order: c.order }
-
-      if (parent) {
-        parent.children.push(child)
-      } else {
-        // If parent not found, fail gracefully: make it top-level
-        parents.push({ ...child, children: [] })
-      }
+      if (parent) parent.children.push(child)
+      else parents.push({ ...child, children: [] })
     }
 
-    // Sort children and parents
     for (const p of parents) {
       p.children.sort((a, b) => (a.order ?? 999) - (b.order ?? 999) || a.label.localeCompare(b.label))
     }

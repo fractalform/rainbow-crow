@@ -2,13 +2,9 @@ import { defineCollection, defineContentConfig, z } from '@nuxt/content'
 
 export default defineContentConfig({
   collections: {
-    // Blog stays under /blog/*
     blog: defineCollection({
       type: 'page',
-      source: {
-        include: 'blog/**'
-        // prefix auto-detected as "/blog" from "blog/**"
-      },
+      source: { include: 'blog/**' },
       schema: z.object({
         title: z.string(),
         description: z.string().optional(),
@@ -18,22 +14,15 @@ export default defineContentConfig({
         category: z.string().optional(),
         date: z.string().optional(),
         image: z.string().optional(),
-          // nav metadata
         nav: z.boolean().optional(),
         navTitle: z.string().optional(),
         navOrder: z.number().optional(),
         navParent: z.string().optional()
       })
     }),
-
-    // Pages live in content/pages/* but route at /<slug>
     pages: defineCollection({
       type: 'page',
-      source: {
-        include: 'pages/**',
-        // IMPORTANT: strip "/pages" from URLs by forcing prefix to "/"
-        prefix: '/'
-      },
+      source: { include: 'pages/**', prefix: '/' },
       schema: z.object({
         title: z.string(),
         description: z.string().optional(),
@@ -47,6 +36,18 @@ export default defineContentConfig({
         navTitle: z.string().optional(),
         navOrder: z.number().optional(),
         navParent: z.string().optional()
+      })
+    }),
+    events: defineCollection({
+      type: 'page',
+      source: { include: 'events/**', prefix: '/events' },
+      schema: z.object({
+        title: z.string(),
+        date: z.string(),
+        time: z.string().optional(),
+        location: z.string().optional(),
+        blurb: z.string().optional(),
+        image: z.string().optional()
       })
     })
   }

@@ -1,7 +1,7 @@
 ---
 title: First Post
 description: Posts and updates.
-summary: A short preview used on cards (safe string).
+summary: A short preview used on cards.
 tags: [nuxt]
 category: Blog
 date: 2026-02-09
