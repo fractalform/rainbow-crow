@@ -9,9 +9,10 @@
 // page or component needs to change.
 
 import { products, type Product, type ProductCategory } from '~/data/catalog'
+import { GROUP_ORDER, TAG_GROUPS } from '~/data/tagGroups'
 
 export type CatalogQuery = {
-  category?: ProductCategory | string
+  category?: ProductCategory | string | (ProductCategory | string)[]
   tags?: string[]
   q?: string
 }
@@ -21,7 +22,8 @@ export function useCatalog() {
     let result = [...products]
 
     if (opts.category) {
-      result = result.filter(p => p.category === opts.category)
+      const cats = Array.isArray(opts.category) ? opts.category : [opts.category]
+      if (cats.length) result = result.filter(p => cats.includes(p.category))
     }
 
     if (opts.tags?.length) {
@@ -56,21 +58,45 @@ export function useCatalog() {
   }
 
   async function getCategories(): Promise<string[]> {
-    const order = ['Books', 'Graphic Novels', 'Board Games', 'RPGs', 'CCGs', 'Accessories']
+    const order = ['Books', 'Graphic Novels', 'Board Games', 'RPGs', 'CCGs', 'Accessories', 'Merch']
     const present = new Set(products.map(p => p.category))
     return order.filter(c => present.has(c as ProductCategory))
   }
 
   /**
-   * Tags are category-scoped by default — pass a category to get only
-   * the tags that actually appear on products in it (so Accessories
-   * never shows "skirmish", etc.). No hardcoded per-category tag
+   * Tags are category-scoped by default — pass one or more categories
+   * to get only the tags that actually appear on products in them (so
+   * Accessories never shows "skirmish", etc.). With multiple
+   * categories, this is a union — a tag shows up if it's present on
+   * ANY of the selected categories. No hardcoded per-category tag
    * lists to maintain; it's derived from whatever's in the catalog.
    * Omit `category` to get every tag across the whole catalog.
    */
-  async function getTags(category?: string): Promise<string[]> {
-    const pool = category ? products.filter(p => p.category === category) : products
+  async function getTags(category?: string | string[]): Promise<string[]> {
+    const cats = category ? (Array.isArray(category) ? category : [category]) : []
+    const pool = cats.length ? products.filter(p => cats.includes(p.category)) : products
     return Array.from(new Set(pool.flatMap(p => p.tags))).sort()
+  }
+
+  /**
+   * Same tags as getTags, but bucketed into labeled sections (see
+   * app/data/tagGroups.ts) for the grouped filter UI. Groups are only
+   * included if they actually have at least one tag present for the
+   * current category — no empty "Nonfiction Subject" heading showing
+   * up under Board Games. Any tag not in the mapping falls into
+   * "Other" rather than vanishing silently.
+   */
+  async function getGroupedTags(category?: string | string[]): Promise<{ label: string; tags: string[] }[]> {
+    const flat = await getTags(category)
+    const buckets = new Map<string, string[]>()
+    for (const tag of flat) {
+      const label = TAG_GROUPS[tag] ?? 'Other'
+      if (!buckets.has(label)) buckets.set(label, [])
+      buckets.get(label)!.push(tag)
+    }
+    return GROUP_ORDER
+      .filter(label => buckets.has(label))
+      .map(label => ({ label, tags: buckets.get(label)! }))
   }
 
   /**
@@ -86,5 +112,5 @@ export function useCatalog() {
     return undefined
   }
 
-  return { getProducts, getProduct, getFeatured, getCategories, getTags, coverUrl }
+  return { getProducts, getProduct, getFeatured, getCategories, getTags, getGroupedTags, coverUrl }
 }
