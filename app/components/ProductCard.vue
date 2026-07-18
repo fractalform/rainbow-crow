@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Product } from '~/data/catalog'
 
-const props = defineProps<{ product: Product }>()
+const props = withDefaults(defineProps<{ product: Product; compact?: boolean }>(), { compact: false })
 
 const { coverUrl } = useCatalog()
 const staticCover = computed(() => coverUrl(props.product, 'M'))
@@ -16,7 +16,7 @@ const imgFailed = ref(false)
 </script>
 
 <template>
-  <AppCard :to="`/catalog/${product.slug}`" class="product-card sheen-hover">
+  <AppCard :to="`/catalog/${product.slug}`" class="product-card sheen-hover" :class="{ compact }">
     <div class="row">
       <div class="cover" :class="{ placeholder: !cover || imgFailed }">
         <img
@@ -42,7 +42,7 @@ const imgFailed = ref(false)
         </div>
 
         <p class="maker">{{ product.maker }}</p>
-        <p class="blurb">{{ product.blurb }}</p>
+        <p v-if="!compact" class="blurb">{{ product.blurb }}</p>
 
         <div class="meta">
           <span v-if="product.status" class="badge-status" :data-status="product.status">
@@ -53,7 +53,9 @@ const imgFailed = ref(false)
           </span>
           <span v-if="product.contentWarning" class="badge-cw">CW</span>
           <span v-if="product.price != null" class="price">${{ product.price.toFixed(2) }}</span>
-          <TagBadge v-for="t in product.tags.slice(0, 3)" :key="t">{{ t }}</TagBadge>
+          <template v-if="!compact">
+            <TagBadge v-for="t in product.tags.slice(0, 3)" :key="t">{{ t }}</TagBadge>
+          </template>
         </div>
       </div>
     </div>
@@ -152,4 +154,15 @@ const imgFailed = ref(false)
     height: 96px;
   }
 }
+
+/* Compact mode: for dense featured strips (e.g. the catalog page's
+   "Featured" row) where a full blurb + tag list would make each card
+   too tall for a tight grid. Smaller cover, no blurb, no tags — just
+   enough to identify the item and invite a click. */
+.product-card.compact .row { grid-template-columns: 64px minmax(0, 1fr); gap: 0.75rem; }
+.product-card.compact .cover { width: 64px; height: 86px; }
+.product-card.compact .title { font-size: 0.95rem; }
+.product-card.compact .maker { font-size: 0.82rem; }
+.product-card.compact .meta { margin-top: 0.4rem; }
+
 </style>

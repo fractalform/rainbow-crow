@@ -67,6 +67,7 @@ img, svg, video, canvas { max-width: 100%; height: auto; display: block; }
   --accent-warm: #f7b32b;
   --accent-pink: #f472b6;
   --accent-blue: #5b9dfc;
+  --accent-red: #ff5e5b;
 
   --rainbow: linear-gradient(90deg,
     #ff5e5b 0%, #f7b32b 20%, #4ade80 40%,
@@ -111,7 +112,9 @@ a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-under
 section { padding: var(--section-y) 0; }
 .page-head { margin-bottom: 1.25rem; }
 .page-head h1 { margin-bottom: 0.25rem; }
-.page-subtitle { margin: 0; color: var(--muted); max-width: 70ch; }
+.page-subtitle { margin: 0; color: var(--muted); max-width: 90ch; }
+.page-subtitle a { color: var(--accent); text-decoration: underline; text-decoration-color: rgba(157, 140, 255, 0.4); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: text-decoration-color var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out); }
+.page-subtitle a:hover { color: #c4b8ff; text-decoration-color: #c4b8ff; }
 .grid-cards { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
 .stack > * + * { margin-top: 1rem; }
 .stack-sm > * + * { margin-top: 0.5rem; }
@@ -182,6 +185,7 @@ input { color: var(--text); }
 .badge-cat[data-cat="RPGs"]         { color: var(--accent);      border-color: rgba(157,140,255,0.4); }
 .badge-cat[data-cat="CCGs"]         { color: var(--accent-2);    border-color: rgba(45,212,191,0.4); }
 .badge-cat[data-cat="Accessories"]  { color: var(--accent-pink); border-color: rgba(244,114,182,0.4); }
+.badge-cat[data-cat="Merch"]        { color: var(--accent-red);  border-color: rgba(255,94,91,0.4); }
 
 .badge-status { display: inline-flex; align-items: center; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.78rem; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); }
 .badge-status[data-status="favorite"]   { color: var(--accent-warm); border-color: rgba(247,179,43,0.4); }

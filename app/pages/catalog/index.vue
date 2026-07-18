@@ -8,7 +8,7 @@ const route = useRoute()
 const router = useRouter()
 const query = computed(() => route.query ?? {})
 
-const { getProducts, getCategories, getGroupedTags } = useCatalog()
+const { getProducts, getCategories, getGroupedTags, getFeatured } = useCatalog()
 
 const selectedCategories = computed<string[]>(() => {
   const c = query.value.category
@@ -31,6 +31,7 @@ const { data: items } = await useAsyncData(
   { watch: [selectedCategories, selectedTags, searchQuery] }
 )
 const { data: categories } = await useAsyncData('shop-categories', () => getCategories())
+const { data: featured } = await useAsyncData('shop-featured', () => getFeatured(6))
 
 // Tags are scoped to the selected category so the chip rows only ever
 // show genres that make sense for it (no "skirmish" under
@@ -93,10 +94,18 @@ function groupHasActiveTag(tags: string[]) {
       <div class="page-head">
         <h1>Catalog</h1>
         <p class="page-subtitle">
-          Books, games, and the stuff that goes with them — curated by the Rainbow Crow
-          community and the team behind it. Find something here, then come talk about
-          it with us.
+          <strong>Books, games, and the stuff that goes with them</strong> — curated by the Rainbow Crow
+          community and the team behind it. 
+          
+          At the top of this page are our main picks this week. Find the full curated catalog below. 
+          Scroll down, browse around, find something you like, then come <NuxtLink to="/community">talk about it with us</NuxtLink>!
         </p>
+      </div>
+      <div v-if="featured?.length" class="featured-strip">
+        <h2 class="featured-heading">This week's picks</h2>
+        <div class="grid-cards compact-grid">
+          <ProductCard v-for="p in featured" :key="p.slug" :product="p" compact />
+        </div>
       </div>
 
       <div class="filters ui-card">
@@ -148,6 +157,9 @@ function groupHasActiveTag(tags: string[]) {
 </template>
 
 <style scoped>
+.featured-strip { margin-top: 1.5rem; }
+.featured-heading { margin: 0 0 0.75rem; font-size: 1.5rem; }
+.compact-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem; }
 .filters { margin-top: 1rem; padding: 1rem; display: grid; gap: 0.75rem; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .ui-chip.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 750; }
