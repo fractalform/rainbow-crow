@@ -7,10 +7,10 @@ useHead({
 })
 
 const features = [
-  { title: 'About', subtitle: 'Why "Rainbow Crow"?', excerpt: 'The story behind the name — provenance, queerness, and very smart birds.', to: '/about', image: '/images/RC_About.png' },
+  { title: 'About', subtitle: 'What is "Rainbow Crow"?', excerpt: 'The story of Rainbow Crow Books & Games, our dreams and goals.', to: '/about', image: '/images/RC_About.png' },
   { title: 'Community', subtitle: 'The flock', excerpt: 'Game nights, the Discord, local events, and what the hobby is playing right now.', to: '/community', image: '/images/RC_Community.png' },
-  { title: 'Blog', subtitle: 'From the nest', excerpt: 'Recommendations, shop news, and notes on games worth your table time.', to: '/blog', image: '/images/RC_Blog.png' },
-  { title: 'Catalog', subtitle: 'Books & games', excerpt: 'RPGs, board games, CCGs, books, zines, tarot, dice — curated, not algorithmic.', to: '/catalog', image: '/images/RC_Catalog.png' }
+  { title: 'Blog', subtitle: 'From the nest', excerpt: 'Latest interests, recommendations, Crow news, and notes on games worth your table time.', to: '/blog', image: '/images/RC_Blog.png' },
+  { title: 'Catalog', subtitle: 'Books, Games, and More', excerpt: 'RPGs, board games, CCGs, books, zines, tarot, dice — curated, not algorithmic.', to: '/catalog', image: '/images/RC_Catalog.png' }
 ]
 
 const { getFeatured } = useCatalog()
@@ -25,7 +25,7 @@ const { data: featured } = await useAsyncData('home-featured', () => getFeatured
         <p class="tagline">Books & Games</p>
         <p class="muted intro">
           Central Vermont's epic gathering site for books, zines, board games, tabletop RPGs,
-          CCGs, tarot, gaming accessories — and the people who love them. We are a pop-up hub without a brick-and-mortar (for now).
+          CCGs, tarot, gaming accessories — and the people who love them. We are a pop-up hub with a lot of ideas but without a brick-and-mortar (for now).
         </p>
       </div>
       <hr class="rainbow-rule hero-rule" />
