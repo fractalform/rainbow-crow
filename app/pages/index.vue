@@ -63,7 +63,7 @@ const { data: featured } = await useAsyncData('home-featured', () => getFeatured
 .featured { padding-top: 0; }
 .see-all { margin-top: 1.5rem; text-align: center; }
 @media (max-width: 480px) {
-  .hero h1 { font-size: 2.4rem; letter-spacing: 0; }
-  .tagline { font-size: 1.3rem; }
+  .hero h1 { font-size: 4.2rem; letter-spacing: 0; }
+  .tagline { font-size: 1.5rem; }
 }
 </style>
